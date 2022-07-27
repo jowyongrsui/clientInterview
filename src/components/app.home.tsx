@@ -1,24 +1,19 @@
 import styled from "@emotion/styled";
 import { FC } from "react";
-import { mapDispatch, mapProps } from "../engine/redux";
-import { $authenticateUser } from "../engine/slices/user.slice";
+import { mapProps } from "../engine/redux";
 import AppNav from "./app.navbar";
 import AppTasks from "./app.tasks";
-import CoreButton from "./controls/button";
+import Spinner from "../components/controls/spinner";
 
 const AppHome: FC = () => {
-  const dispatch = mapDispatch();
   const ready = mapProps((state) => state.user.isAuthenticated);
 
-  const login = (
-    <CoreButton text="Login" click={() => dispatch($authenticateUser())}/>
-  );
   return (
     <Styled>
       <div className="navbar">
         <AppNav />
       </div>
-      <div className="tasks">{ready ? <AppTasks /> : login}</div>
+      <div className="tasks">{ready ? <AppTasks /> : <Spinner />}</div>
     </Styled>
   );
 };

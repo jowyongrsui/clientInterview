@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { FC, useState } from "react";
 import { TaskGroupModel } from "../engine/proxies/task.proxy";
+import { mapDispatch } from "../engine/redux";
+import { addFilter, removeFilter } from "../engine/slices/tasking.slice";
 
 type Props = {
   taskGroup: TaskGroupModel;
@@ -9,16 +11,27 @@ type Props = {
 
 const AppTasksGroup: FC<Props> = (props) => {
   const [selected, setSelected] = useState(false);
+  const dispatch = mapDispatch();
 
   if (props.taskGroup) {
     const selectedclass = selected ? "selected" : null;
-    const select = () => {
-      console.log("select", !selected);
+
+    const select = (taskId: number) => () => {
+      if (!selected) {
+        dispatch(addFilter(taskId));
+      } else {
+        dispatch(removeFilter(taskId));
+      }
+
       if (props.select) props.select(!selected);
       setSelected(!selected);
-    }
+    };
+
     return (
-      <Styled className={`${selectedclass}`} onClick={select}>
+      <Styled
+        className={`${selectedclass}`}
+        onClick={select(props.taskGroup.id)}
+      >
         <div>{`${props.taskGroup.name}`}</div>
         <div className="filter-label">Filter</div>
       </Styled>

@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import store from "../engine/redux";
 import AppHome from "./app.home";
+import TaskCreate from "./task.create";
 
 const App: FC = () => {
   return (
@@ -12,6 +13,7 @@ const App: FC = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<AppHome />} />
+            <Route path="/task" element={<TaskCreate />} />
           </Routes>
         </BrowserRouter>
       </Styled>

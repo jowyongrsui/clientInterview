@@ -47,13 +47,15 @@ export const getTaskGroups = async (): Promise<Array<TaskGroupModel>> => {
   }
 };
 
-export const saveTask = async (task: TaskDetailsModel): Promise<Array<TaskDetailsModel>> => {
+export const saveTask = async (
+  task: TaskDetailsModel
+): Promise<Array<TaskDetailsModel>> => {
   try {
     const valid = task && task.description && task.groupId;
     if (valid) {
       let apiurl = `${apiBaseUrl}/tasks`;
       if (task.id) apiurl += `/${task.id}`;
-      
+
       const apiinit = {
         method: task.id ? "PUT" : "POST",
         headers: apiBaseHeaders,
@@ -68,6 +70,30 @@ export const saveTask = async (task: TaskDetailsModel): Promise<Array<TaskDetail
       throw new Error("Empty or invalid api response");
     }
     throw new Error("Cannot save an invalid task");
+  } catch (ex) {
+    return await Promise.reject();
+  }
+};
+
+export const deleteTask = async (
+  taskId: number
+): Promise<Array<TaskDetailsModel>> => {
+  try {
+    if (taskId) {
+      const apiurl = `${apiBaseUrl}/tasks/${taskId}`;
+      const apiinit = {
+        method: "DELETE",
+        headers: apiBaseHeaders,
+        credentials: "omit",
+      } as RequestInit;
+      const apiresponse = await fetch(apiurl, apiinit);
+      if (apiresponse && apiresponse.ok) {
+        const apiresult = (await apiresponse.json()) as Array<TaskDetailsModel>;
+        if (apiresult) return apiresult;
+      }
+      throw new Error("Empty or invalid api response");
+    }
+    throw new Error("Cannot delete task with invalid id");
   } catch (ex) {
     return await Promise.reject();
   }

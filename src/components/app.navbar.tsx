@@ -1,10 +1,17 @@
 import styled from "@emotion/styled";
-import { FC } from "react";
-import { mapProps } from "../engine/redux";
+import { FC, useEffect } from "react";
+import { mapDispatch, mapProps } from "../engine/redux";
+import { $authenticateUser } from "../engine/slices/user.slice";
 import logo from "../index.svg";
 
 const AppNav: FC = () => {
+  const dispatch = mapDispatch();
   const username = mapProps((state) => state.user.displayName);
+
+  useEffect(() => {
+    dispatch($authenticateUser());
+  }, []);
+
   return (
     <Styled>
       <h1>TASKS</h1>

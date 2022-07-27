@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
 import { FC } from "react";
 import { TaskDetailsModel } from "../engine/proxies/task.proxy";
-import { mapProps } from "../engine/redux";
+import { mapDispatch, mapProps } from "../engine/redux";
+import { $deleteTask } from "../engine/slices/tasking.slice";
 import CoreButton from "./controls/button";
 
 type Props = {
@@ -9,15 +10,25 @@ type Props = {
 };
 
 const AppTasksTile: FC<Props> = (props) => {
+  const dispatch = mapDispatch();
+
   const groupid = props.task.groupId;
-  const group = mapProps((state) => state.tasking.taskGroups.find((inst) => inst.id === groupid));
+  const group = mapProps((state) =>
+    state.tasking.taskGroups.find((inst) => inst.id === groupid)
+  );
   if (props.task) {
     return (
       <Styled>
         <div className="description">{props.task.description}</div>
         <div className="group">{group && group.name}</div>
         <div className="complete">
-          <CoreButton text="Mark Complete" click={() => {}} />
+          <CoreButton
+            text="Mark Complete"
+            click={() => {
+              // dispatch(remove(props.task.id));
+              dispatch($deleteTask(props.task.id));
+            }}
+          />
         </div>
       </Styled>
     );
