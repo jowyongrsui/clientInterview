@@ -6,8 +6,10 @@ import AppTasksTile from "./app.tasks.tile";
 import AppTasksGroup from "./app.tasks.group";
 import CoreButton from "./controls/button";
 import { useNavigate } from "react-router-dom";
+import Spinner from "./controls/spinner";
 
 const AppTasks: FC = () => {
+  const isLoading = mapProps((state) => state.tasking.isLoading);
   const tasks = mapProps((state) => state.tasking.filteredTasks);
   const groups = mapProps((state) => state.tasking.taskGroups);
   const dispatch = mapDispatch();
@@ -28,6 +30,10 @@ const AppTasks: FC = () => {
   const taskgroups = groups.map((group) => (
     <AppTasksGroup key={group.id} taskGroup={group} />
   ));
+
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <Styled>
       <div className="groups">

@@ -7,6 +7,7 @@ import {
   TaskDetailsModel,
   TaskGroupModel,
 } from "../proxies/task.proxy";
+import { RootState } from "../redux";
 
 export const $getTasks = createAsyncThunk("thunk-get-tasks", getTasks);
 export const $getTaskGroups = createAsyncThunk(
@@ -34,6 +35,7 @@ const __filterTasks = (
 export const taskingSlice = createSlice({
   name: "tasking",
   initialState: {
+    isLoading: false,
     activeTasks: new Array<TaskDetailsModel>(),
     taskGroups: new Array<TaskGroupModel>(),
     filteredTasks: new Array<TaskDetailsModel>(),
@@ -69,7 +71,11 @@ export const taskingSlice = createSlice({
     },
   },
   extraReducers(builder) {
+    builder.addCase($getTasks.pending, (state) => {
+      state.isLoading = true;
+    });
     builder.addCase($getTasks.fulfilled, (state, action) => {
+      state.isLoading = false;
       state.activeTasks = action.payload;
       // set filteredTasks defaulted to allTasks
       state.filteredTasks = action.payload;
